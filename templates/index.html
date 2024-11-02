@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Soundscape Studio</title>
+</head>
+<body>
+    <h1>Soundscape Studio</h1>
+    <button onclick="playSound('soundscape1.mp3')">Play Soundscape 1</button>
+    <button onclick="playSound('soundscape2.mp3')">Play Soundscape 2</button>
+    <button onclick="playSound('soundscape3.mp3')">Play Soundscape 3</button>
+
+    <audio id="audio-player" controls style="display:none;"></audio>
+
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>
