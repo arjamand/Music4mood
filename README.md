@@ -1,10 +1,11 @@
 # Soundscape Studio 🎶
 
-Experience music that matches your mood. Soundscape Studio is an elegant web application that creates personalized music recommendations based on your emotional state.
+Experience music that matches your mood. Soundscape Studio is an elegant web application integrated with custom AI Model that creates personalized music recommendations based on your emotional state.
 
 ## ✨ Features
 
-- **Mood-Based Music**: Get music recommendations that resonate with your current emotions
+- **AI-Powered Music Selection**: Advanced emotion analysis model to understand your mood
+- **Smart Recommendations**: Intelligent matching of music to emotional states
 - **Clean Interface**: Minimalist design focused on user experience
 - **Instant Playback**: Stream music directly in your browser
 - **Responsive Design**: Seamless experience across all devices
@@ -13,7 +14,7 @@ Experience music that matches your mood. Soundscape Studio is an elegant web app
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/soundscape-studio
+git clone https://github.com/arjamand/Soundscape-Studio
 cd soundscape-studio
 ```
 
@@ -34,19 +35,21 @@ Visit `http://localhost:5000` in your browser.
 ```
 soundscape-studio/
 ├── app.py              # Flask application
+├── model/              # AI emotion analysis model directory
 ├── static/
-│   ├── audio/         # Music files
+│   ├── audio/          # Music files categorized by emotion
 │   │   ├── calm/
 │   │   ├── energetic/
 │   │   └── relaxed/
-│   └── css/           # Styling
-└── templates/         # HTML templates
+│   └── css/            # Styling
+└── templates/          # HTML templates
 ```
 
 ## 🔧 Technology Stack
 
 - **Frontend**: HTML5, CSS3, JavaScript
 - **Backend**: Python, Flask
+- **AI Model**: Custom emotion classification model
 - **Audio**: HTML5 Audio API
 - **Design**: CSS Grid, Flexbox, Animations
 
@@ -70,11 +73,12 @@ Contributions are welcome! Feel free to:
 
 ## 💡 Future Plans
 
-- User accounts and preferences
+- Enhanced AI emotion detection
+- Personalized learning from user feedback
 - Extended mood categories
 - Playlist generation
 - Music upload functionality
 
 ---
 
-Made with ❤️ for music lovers everywhere
+Made with ❤️ for music lovers and AI enthusiasts
