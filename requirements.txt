@@ -1,0 +1,4 @@
+Flask==2.3.2
+numpy==1.24.3
+tensorflow==2.13.0
+pickle5==0.0.11
