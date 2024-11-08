@@ -78,7 +78,6 @@ Contributions are welcome! Feel free to:
 - Extended mood categories
 - Playlist generation
 - Music upload functionality
-
 ---
 
 Made with ❤️ for music lovers and AI enthusiasts

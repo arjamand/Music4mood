@@ -4,7 +4,183 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Soundscape Studio</title>
-    <link rel="stylesheet" href="static/css/styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 2rem;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeIn 1s ease-out;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #a0a0a0;
+            animation: fadeIn 1s ease-out 0.3s backwards;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .mood-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #fff;
+        }
+
+        #moodForm {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        #moodText {
+            width: 100%;
+            height: 120px;
+            padding: 1rem;
+            font-size: 1.1rem;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            resize: none;
+            transition: all 0.3s ease;
+        }
+
+        #moodText:focus {
+            outline: none;
+            border-color: #4facfe;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        #moodText::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        button {
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .audio-player {
+            margin-top: 2rem;
+            width: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .audio-player.visible {
+            opacity: 1;
+        }
+
+        audio {
+            width: 100%;
+            height: 40px;
+            border-radius: 12px;
+        }
+
+        footer {
+            padding: 1.5rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: none;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .loading div {
+            width: 10px;
+            height: 10px;
+            margin: 0 5px;
+            background: #4facfe;
+            border-radius: 50%;
+            animation: bounce 0.5s alternate infinite;
+        }
+
+        .loading div:nth-child(2) { animation-delay: 0.16s; }
+        .loading div:nth-child(3) { animation-delay: 0.32s; }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -16,13 +192,21 @@
         <section class="mood-input">
             <h2>How are you feeling today?</h2>
             <form id="moodForm">
-                <textarea id="moodText" placeholder="Describe your mood..." required></textarea>
-                <button type="submit">Submit</button>
+                <textarea 
+                    id="moodText" 
+                    placeholder="Describe your mood... (e.g., 'feeling energetic and ready to dance')" 
+                    required
+                ></textarea>
+                <div class="loading">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <button type="submit">Find My Music</button>
             </form>
-        </section>
-
-        <section class="audio-player" style="display:none;">
-            <audio id="audioPlayer" controls autoplay></audio>
+            <div class="audio-player">
+                <audio id="audioPlayer" controls></audio>
+            </div>
         </section>
     </main>
 
@@ -33,30 +217,60 @@
     <script>
         document.getElementById("moodForm").addEventListener("submit", async function(event) {
             event.preventDefault();
-
-            const moodText = document.getElementById("moodText").value;
-
-            // Make a request to the server with the user's mood text
-            const response = await fetch("/get-mood", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ mood: moodText })
-            });
-
-            // Receive mood category from server
-            const { moodCategory } = await response.json();
-
-            // Randomly select a song from the specified mood category directory
-            const randomSong = `/static/audio/${moodCategory}/song${Math.floor(Math.random() * 5) + 1}.mp3`;
             
-            // Set the audio source and play
-            const audioPlayer = document.getElementById("audioPlayer");
-            audioPlayer.src = randomSong;
-            audioPlayer.style.display = "block";
-            audioPlayer.play();
+            const moodText = document.getElementById("moodText").value;
+            const loading = document.querySelector(".loading");
+            const audioPlayer = document.querySelector(".audio-player");
+            const submitButton = this.querySelector("button");
+            
+            // Show loading animation, disable button
+            loading.style.display = "flex";
+            submitButton.disabled = true;
+            submitButton.style.opacity = "0.7";
+            
+            try {
+                // Make a request to the server with the user's mood text
+                const response = await fetch("/get-mood", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ mood: moodText })
+                });
+
+                // Receive mood category from server
+                const { moodCategory } = await response.json();
+
+                // // predictedEmotionElement.textContent = `Mood CAtegory Detected : ${moodCategory}`;
+                // // predictedEmotionElement.textContent = `Emotion Predicted: ${predictedEmotion}`;
+                // const fs = require('fs');
+
+                // //Read the file ad split it into array of lines
+                // const lines = fs.readFileSync('labels.txt', 'utf8').split('\n').filter(Boolean);
+
+                // //Select a random element from the list 
+                // const randomLine - lines[Math.floor(Math.random() * lines.length)];
+
+
+                // Randomly select a song from the specified mood category directory
+                const randomSong = `/static/audio/${moodCategory}/song${Math.floor(Math.random() * 5) + 1}.mp3`;
+                
+                // Set the audio source and play
+                const audioPlayerElement = document.getElementById("audioPlayer");
+                audioPlayerElement.src = randomSong;
+                audioPlayer.classList.add("visible");
+                audioPlayerElement.play();
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Sorry, there was an error processing your request. Please try again.");
+            } finally {
+                // Hide loading animation, enable button
+                loading.style.display = "none";
+                submitButton.disabled = false;
+                submitButton.style.opacity = "1";
+            }
         });
     </script>
 </body>
 </html>
+
