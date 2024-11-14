@@ -117,21 +117,47 @@
             transform: translateY(0);
         }
 
-        .audio-player {
-            margin-top: 2rem;
-            width: 100%;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .audio-player.visible {
-            opacity: 1;
-        }
-
-        audio {
-            width: 100%;
-            height: 40px;
+        #moodResult {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 12px;
+            text-align: center;
+            display: none;
+        }
+
+        .recommended-songs {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .song-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .song-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .song-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .song-title {
+            flex: 1;
+            margin-right: 1rem;
+        }
+
+        .play-button {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
         }
 
         footer {
@@ -141,23 +167,6 @@
             font-size: 0.9rem;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Loading animation */
         .loading {
             display: none;
             justify-content: center;
@@ -175,6 +184,22 @@
 
         .loading div:nth-child(2) { animation-delay: 0.16s; }
         .loading div:nth-child(3) { animation-delay: 0.32s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
         @keyframes bounce {
             from { transform: translateY(0); }
@@ -204,8 +229,10 @@
                 </div>
                 <button type="submit">Find My Music</button>
             </form>
-            <div class="audio-player">
-                <audio id="audioPlayer" controls></audio>
+            <div id="moodResult"></div>
+            <div class="recommended-songs">
+                <h3>Recommended Songs:</h3>
+                <ul class="song-list"></ul>
             </div>
         </section>
     </main>
@@ -220,7 +247,9 @@
             
             const moodText = document.getElementById("moodText").value;
             const loading = document.querySelector(".loading");
-            const audioPlayer = document.querySelector(".audio-player");
+            const moodResult = document.getElementById("moodResult");
+            const recommendedSongs = document.querySelector(".recommended-songs");
+            const songList = document.querySelector(".song-list");
             const submitButton = this.querySelector("button");
             
             // Show loading animation, disable button
@@ -238,28 +267,29 @@
                     body: JSON.stringify({ mood: moodText })
                 });
 
-                // Receive mood category from server
-                const { moodCategory } = await response.json();
+                // Receive mood category and songs data from server
+                const { moodCategory, songs } = await response.json();
 
-                // // predictedEmotionElement.textContent = `Mood CAtegory Detected : ${moodCategory}`;
-                // // predictedEmotionElement.textContent = `Emotion Predicted: ${predictedEmotion}`;
-                // const fs = require('fs');
+                // Display detected mood
+                moodResult.style.display = "block";
+                moodResult.textContent = `Mood / Feeling Detected: ${moodCategory}`;
 
-                // //Read the file ad split it into array of lines
-                // const lines = fs.readFileSync('labels.txt', 'utf8').split('\n').filter(Boolean);
+                // Clear previous song list
+                songList.innerHTML = "";
 
-                // //Select a random element from the list 
-                // const randomLine - lines[Math.floor(Math.random() * lines.length)];
+                // Display recommended songs
+                songs.forEach(song => {
+                    const li = document.createElement("li");
+                    li.className = "song-item";
+                    li.innerHTML = `
+                        <span class="song-title">${song.title}</span>
+                        <button class="play-button" onclick="window.open('${song.link}', '_blank')">Play</button>
+                    `;
+                    songList.appendChild(li);
+                });
 
 
-                // Randomly select a song from the specified mood category directory
-                const randomSong = `/static/audio/${moodCategory}/song${Math.floor(Math.random() * 5) + 1}.mp3`;
-                
-                // Set the audio source and play
-                const audioPlayerElement = document.getElementById("audioPlayer");
-                audioPlayerElement.src = randomSong;
-                audioPlayer.classList.add("visible");
-                audioPlayerElement.play();
+                recommendedSongs.style.display = "block";
             } catch (error) {
                 console.error("Error:", error);
                 alert("Sorry, there was an error processing your request. Please try again.");
@@ -270,7 +300,22 @@
                 submitButton.style.opacity = "1";
             }
         });
+
+        // Function to handle playing songs
+        function playSong(link) {
+            // Create an audio element if it doesn't exist
+            let audioPlayer = document.querySelector('audio');
+            if (!audioPlayer) {
+                audioPlayer = document.createElement('audio');
+                audioPlayer.controls = true;
+                audioPlayer.style.display = 'none';
+                document.body.appendChild(audioPlayer);
+            }
+            
+            // Set the source and play
+            audioPlayer.src = link;
+            audioPlayer.play();
+        }
     </script>
 </body>
 </html>
-
