@@ -1,4 +1,4 @@
-# Soundscape Studio 🎶
+# Music4mood 🎶
 
 Experience music that matches your mood. Soundscape Studio is an elegant web application integrated with custom AI Model that creates personalized music recommendations based on your emotional state.
 
