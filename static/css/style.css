@@ -1,0 +1,281 @@
+:root {
+    --bg-color: #fff;
+    --text-color: #212121;
+    --secondary-text-color: #757575;
+    --accent-color: #4285f4;
+    --input-bg-color: rgba(0, 0, 0, 0.05);
+    --input-border-color: rgba(0, 0, 0, 0.1);
+    --card-bg-color: rgba(0, 0, 0, 0.03);
+    --card-hover-bg-color: rgba(0, 0, 0, 0.07);
+}
+
+.dark-mode {
+    --bg-color: #212121;
+    --text-color: #fff;
+    --secondary-text-color: #a0a0a0;
+    --accent-color: #64b5f6;
+    --input-bg-color: rgba(255, 255, 255, 0.1);
+    --input-border-color: rgba(255, 255, 255, 0.1);
+    --card-bg-color: rgba(255, 255, 255, 0.07);
+    --card-hover-bg-color: rgba(255, 255, 255, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+header {
+    padding: 2rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    background-color: var(--card-bg-color);
+    position: relative;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--accent-color);
+
+}
+
+header p {
+    font-size: 1.2rem;
+    color: var(--secondary-text-color);
+    animation: fadeIn 1s ease-out 0.3s backwards;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.mood-input {
+    width: 100%;
+    max-width: 600px;
+    padding: 2rem;
+    background-color: var(--card-bg-color);
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+    animation: slideUp 0.8s ease-out;
+}
+
+h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--text-color);
+}
+
+#moodForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+}
+
+#languageSelect {
+     width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+     color: var(--text-color);
+    background-color: var(--input-bg-color);
+    border: 2px solid var(--input-border-color);
+     border-radius: 12px;
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%23555555" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+    transition: all 0.3s ease, background-color 0.3s, border-color 0.3s;
+    cursor: pointer;
+}
+ #languageSelect:focus {
+    outline: none;
+    border-color: var(--accent-color);
+     background-color: rgba(0, 0, 0, 0.07);
+}
+  #languageSelect option {
+         background-color: var(--bg-color);
+       color: var(--text-color);
+    }
+
+ #languageSelect option[disabled] {
+    color: var(--secondary-text-color);
+    cursor: not-allowed;
+}
+
+#moodText {
+    width: 100%;
+    height: 120px;
+    padding: 1rem;
+    font-size: 1.1rem;
+    color: var(--text-color);
+    background-color: var(--input-bg-color);
+    border: 2px solid var(--input-border-color);
+    border-radius: 12px;
+    resize: none;
+    transition: all 0.3s ease, background-color 0.3s, border-color 0.3s;
+}
+
+#moodText:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background-color: rgba(0, 0, 0, 0.07);
+}
+
+#moodText::placeholder {
+    color: var(--secondary-text-color);
+}
+
+button {
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    background: var(--accent-color);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(66, 133, 244, 0.4);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+#moodResult {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: var(--card-bg-color);
+    border-radius: 12px;
+    text-align: center;
+    display: none;
+    transition: background-color 0.3s;
+}
+
+.recommended-songs {
+    margin-top: 2rem;
+    display: none;
+}
+
+.song-list {
+    list-style: none;
+    margin-top: 1rem;
+}
+
+.song-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    background-color: var(--card-bg-color);
+    border-radius: 12px;
+    transition: all 0.3s ease, background-color 0.3s;
+}
+
+.song-item:hover {
+    background-color: var(--card-hover-bg-color);
+}
+
+.song-title {
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.play-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+footer {
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--secondary-text-color);
+    font-size: 0.9rem;
+}
+
+  .theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    font-size: 24px;
+    
+}
+
+.loading {
+    display: none;
+    justify-content: center;
+    margin: 1rem 0;
+}
+
+.loading div {
+    width: 10px;
+    height: 10px;
+    margin: 0 5px;
+    background: var(--accent-color);
+    border-radius: 50%;
+    animation: bounce 0.5s alternate infinite;
+}
+
+.loading div:nth-child(2) {
+    animation-delay: 0.16s;
+}
+
+.loading div:nth-child(3) {
+    animation-delay: 0.32s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-10px);
+    }
+}

@@ -4,211 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music4mood</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-        }
-
-        header {
-            padding: 2rem;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(45deg, #00f2fe, #4facfe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: fadeIn 1s ease-out;
-        }
-
-        header p {
-            font-size: 1.2rem;
-            color: #a0a0a0;
-            animation: fadeIn 1s ease-out 0.3s backwards;
-        }
-
-        main {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        .mood-input {
-            width: 100%;
-            max-width: 600px;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            animation: slideUp 0.8s ease-out;
-        }
-
-        h2 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            color: #fff;
-        }
-
-        #moodForm {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        #moodText {
-            width: 100%;
-            height: 120px;
-            padding: 1rem;
-            font-size: 1.1rem;
-            color: #fff;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            resize: none;
-            transition: all 0.3s ease;
-        }
-
-        #moodText:focus {
-            outline: none;
-            border-color: #4facfe;
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        #moodText::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        button {
-            padding: 1rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #fff;
-            background: linear-gradient(45deg, #00f2fe, #4facfe);
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        #moodResult {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            text-align: center;
-            display: none;
-        }
-
-        .recommended-songs {
-            margin-top: 2rem;
-            display: none;
-        }
-
-        .song-list {
-            list-style: none;
-            margin-top: 1rem;
-        }
-
-        .song-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .song-item:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .song-title {
-            flex: 1;
-            margin-right: 1rem;
-        }
-
-        .play-button {
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-        }
-
-        footer {
-            padding: 1.5rem;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-        }
-
-        .loading {
-            display: none;
-            justify-content: center;
-            margin: 1rem 0;
-        }
-
-        .loading div {
-            width: 10px;
-            height: 10px;
-            margin: 0 5px;
-            background: #4facfe;
-            border-radius: 50%;
-            animation: bounce 0.5s alternate infinite;
-        }
-
-        .loading div:nth-child(2) { animation-delay: 0.16s; }
-        .loading div:nth-child(3) { animation-delay: 0.32s; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-10px); }
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <header>
+       <span class="theme-toggle" onclick="toggleTheme()">☀️</span>
         <h1>🎶 Music4mood 🎶</h1>
         <p>Let us play music that matches your mood!</p>
     </header>
@@ -217,11 +17,25 @@
         <section class="mood-input">
             <h2>How are you feeling today?</h2>
             <form id="moodForm">
-                <textarea 
-                    id="moodText" 
-                    placeholder="Describe your mood... (e.g., 'feeling energetic and ready to dance')" 
+                <textarea
+                    id="moodText"
+                    placeholder="Describe your mood... (e.g., 'feeling energetic and ready to dance')"
                     required
                 ></textarea>
+                <select id="languageSelect">
+                    <option value="" disabled selected>Select Language</option>
+                    <option value="english">English</option>
+                    <option value="spanish" disabled>Spanish (Coming Soon)</option>
+                    <option value="hindi" disabled>Hindi (Coming Soon)</option>
+                    <option value="french" disabled>French (Coming Soon)</option>
+                    <option value="german" disabled>German (Coming Soon)</option>
+                    <option value="japanese" disabled>Japanese (Coming Soon)</option>
+                    <option value="korean" disabled>Korean (Coming Soon)</option>
+                    <option value="arabic" disabled>Arabic (Coming Soon)</option>
+                    <option value="portuguese" disabled>Portuguese (Coming Soon)</option>
+                    <option value="russian" disabled>Russian (Coming Soon)</option>
+                </select>
+                
                 <div class="loading">
                     <div></div>
                     <div></div>
@@ -240,82 +54,6 @@
     <footer>
         <p>Music4mood © 2024</p>
     </footer>
-
-    <script>
-        document.getElementById("moodForm").addEventListener("submit", async function(event) {
-            event.preventDefault();
-            
-            const moodText = document.getElementById("moodText").value;
-            const loading = document.querySelector(".loading");
-            const moodResult = document.getElementById("moodResult");
-            const recommendedSongs = document.querySelector(".recommended-songs");
-            const songList = document.querySelector(".song-list");
-            const submitButton = this.querySelector("button");
-            
-            // Show loading animation, disable button
-            loading.style.display = "flex";
-            submitButton.disabled = true;
-            submitButton.style.opacity = "0.7";
-            
-            try {
-                // Make a request to the server with the user's mood text
-                const response = await fetch("/get-mood", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ mood: moodText })
-                });
-
-                // Receive mood category and songs data from server
-                const { moodCategory, songs } = await response.json();
-
-                // Display detected mood
-                moodResult.style.display = "block";
-                moodResult.textContent = `Mood / Feeling Detected: ${moodCategory}`;
-
-                // Clear previous song list
-                songList.innerHTML = "";
-
-                // Display recommended songs
-                songs.forEach(song => {
-                    const li = document.createElement("li");
-                    li.className = "song-item";
-                    li.innerHTML = `
-                        <span class="song-title">${song.title}</span>
-                        <button class="play-button" onclick="window.open('${song.link}', '_blank')">Play</button>
-                    `;
-                    songList.appendChild(li);
-                });
-
-
-                recommendedSongs.style.display = "block";
-            } catch (error) {
-                console.error("Error:", error);
-                alert("Sorry, there was an error processing your request. Please try again.");
-            } finally {
-                // Hide loading animation, enable button
-                loading.style.display = "none";
-                submitButton.disabled = false;
-                submitButton.style.opacity = "1";
-            }
-        });
-
-        // Function to handle playing songs
-        function playSong(link) {
-            // Create an audio element if it doesn't exist
-            let audioPlayer = document.querySelector('audio');
-            if (!audioPlayer) {
-                audioPlayer = document.createElement('audio');
-                audioPlayer.controls = true;
-                audioPlayer.style.display = 'none';
-                document.body.appendChild(audioPlayer);
-            }
-            
-            // Set the source and play
-            audioPlayer.src = link;
-            audioPlayer.play();
-        }
-    </script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
