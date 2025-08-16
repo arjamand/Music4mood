@@ -14,8 +14,8 @@ Experience music that matches your mood. Soundscape Studio is an elegant web app
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/arjamand/Soundscape-Studio
-cd soundscape-studio
+https://github.com/arjamand/Music4mood
+cd Music4mood
 ```
 
 2. **Install dependencies**
